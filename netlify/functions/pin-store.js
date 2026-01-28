@@ -1,24 +1,22 @@
-let CURRENT_PIN = null;
+import { getStore } from "@netlify/blobs";
 
-exports.handler = async (event) => {
-  if (event.httpMethod !== "POST") {
-    return { statusCode: 405 };
-  }
+const store = getStore({
+  name: "admin-pin",
+  siteID: process.env.NETLIFY_SITE_ID,
+  token: process.env.NETLIFY_AUTH_TOKEN
+});
 
-  const { pin, expiresAt } = JSON.parse(event.body);
-
-  CURRENT_PIN = {
+export async function savePin(pin, expiresAt) {
+  await store.set("current", {
     pin,
     expiresAt
-  };
+  });
+}
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ stored: true })
-  };
-};
+export async function getPin() {
+  return await store.get("current", { type: "json" });
+}
 
-// ⚠️ Nota importante:
-// su Netlify free questo vive in memoria.
-// Va bene per admin PIN temporanei.
-// Se un giorno vuoi persistenza → Firestore.
+export async function clearPin() {
+  await store.delete("current");
+}
