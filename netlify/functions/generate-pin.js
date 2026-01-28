@@ -1,26 +1,27 @@
+import { getPinData, setPinData, isExpired } from "./pin-store.js";
+
 export async function handler() {
-  const now = Date.now();
+  const { pin, expiresAt } = getPinData();
 
-  if (!globalThis.ADMIN_PIN || now > globalThis.PIN_EXPIRES) {
-    const pin = Math.floor(100000 + Math.random() * 900000).toString();
-    const expiresAt = now + 24 * 60 * 60 * 1000;
+  if (!pin || isExpired()) {
+    const newPin = Math.floor(100000 + Math.random() * 900000).toString();
+    const newExpires = Date.now() + 24 * 60 * 60 * 1000;
 
-    globalThis.ADMIN_PIN = pin;
-    globalThis.PIN_EXPIRES = expiresAt;
+    setPinData(newPin, newExpires);
 
     await fetch(process.env.DISCORD_WEBHOOK, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        content: `🔐 **ADMIN PIN**\nPIN: **${pin}**\nScade: <t:${Math.floor(expiresAt / 1000)}:R>`
+        content: `🔐 **ECLIPSE SHOP – ADMIN PIN**
+PIN: **${newPin}**
+Scade: <t:${Math.floor(newExpires / 1000)}:R>`
       })
     });
   }
 
   return {
     statusCode: 200,
-    body: JSON.stringify({
-      expiresAt: globalThis.PIN_EXPIRES
-    })
+    body: JSON.stringify({ ok: true })
   };
 }
