@@ -1,15 +1,24 @@
-export function getPinData() {
-  return {
-    pin: globalThis.ADMIN_PIN,
-    expiresAt: globalThis.PIN_EXPIRES
+let CURRENT_PIN = null;
+
+exports.handler = async (event) => {
+  if (event.httpMethod !== "POST") {
+    return { statusCode: 405 };
+  }
+
+  const { pin, expiresAt } = JSON.parse(event.body);
+
+  CURRENT_PIN = {
+    pin,
+    expiresAt
   };
-}
 
-export function setPinData(pin, expiresAt) {
-  globalThis.ADMIN_PIN = pin;
-  globalThis.PIN_EXPIRES = expiresAt;
-}
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ stored: true })
+  };
+};
 
-export function isExpired() {
-  return !globalThis.PIN_EXPIRES || Date.now() > globalThis.PIN_EXPIRES;
-}
+// ⚠️ Nota importante:
+// su Netlify free questo vive in memoria.
+// Va bene per admin PIN temporanei.
+// Se un giorno vuoi persistenza → Firestore.
