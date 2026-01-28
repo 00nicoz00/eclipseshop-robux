@@ -1,34 +1,30 @@
-let activePin = null;
-let expiresAt = null;
-
 exports.handler = async (event) => {
   const { pin } = JSON.parse(event.body || "{}");
 
-  if (!activePin || !expiresAt) {
-    return json(false, "No active PIN");
+  const store = global.__ADMIN_PIN__?.();
+  if (!store || !store.activePin) {
+    return {
+      statusCode: 401,
+      body: JSON.stringify({ error: "No active PIN" })
+    };
   }
 
-  if (Date.now() > expiresAt) {
-    activePin = null;
-    expiresAt = null;
-    return json(false, "PIN expired");
+  if (Date.now() > store.expiresAt) {
+    return {
+      statusCode: 401,
+      body: JSON.stringify({ error: "PIN expired" })
+    };
   }
 
-  if (pin !== activePin) {
-    return json(false, "Invalid PIN");
+  if (pin !== store.activePin) {
+    return {
+      statusCode: 401,
+      body: JSON.stringify({ error: "Invalid PIN" })
+    };
   }
 
-  // PIN OK → invalida subito
-  activePin = null;
-  expiresAt = null;
-
-  return json(true);
-};
-
-function json(ok, error) {
   return {
-    statusCode: ok ? 200 : 401,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(ok ? { ok: true } : { ok: false, error })
+    statusCode: 200,
+    body: JSON.stringify({ ok: true })
   };
-}
+};
