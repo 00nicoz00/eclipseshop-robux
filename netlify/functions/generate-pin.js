@@ -1,15 +1,21 @@
-export async function handler() {
-  const webhook = process.env.DISCORD_WEBHOOK;
+let currentPin = null;
+let expiresAt = null;
 
-  if (!webhook) {
+export async function handler() {
+  const now = Date.now();
+
+  // se esiste ed è ancora valido, NON rigenerare
+  if (currentPin && expiresAt && now < expiresAt) {
     return {
-      statusCode: 500,
-      body: JSON.stringify({ error: "DISCORD_WEBHOOK missing" }),
+      statusCode: 200,
+      body: JSON.stringify({ ok: true }),
     };
   }
 
-  const pin = Math.floor(100000 + Math.random() * 900000).toString();
-  const expiresAt = Date.now() + 24 * 60 * 60 * 1000;
+  currentPin = Math.floor(100000 + Math.random() * 900000).toString();
+  expiresAt = now + 24 * 60 * 60 * 1000;
+
+  const webhook = process.env.DISCORD_WEBHOOK;
 
   await fetch(webhook, {
     method: "POST",
@@ -20,14 +26,13 @@ export async function handler() {
           title: "🔐 Eclipse Admin PIN",
           color: 16711680,
           fields: [
-            { name: "PIN", value: `**${pin}**`, inline: true },
+            { name: "PIN", value: `**${currentPin}**`, inline: true },
             {
               name: "Expires",
               value: `<t:${Math.floor(expiresAt / 1000)}:R>`,
               inline: true,
             },
           ],
-          footer: { text: "Eclipse Shop Security" },
         },
       ],
     }),
@@ -35,6 +40,6 @@ export async function handler() {
 
   return {
     statusCode: 200,
-    body: JSON.stringify({ pin, expiresAt }),
+    body: JSON.stringify({ ok: true }),
   };
 }
