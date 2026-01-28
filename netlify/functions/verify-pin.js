@@ -1,32 +1,34 @@
-import { getPinData } from "./generate-pin.js";
+let activePin = null;
+let expiresAt = null;
 
-export const handler = async (event) => {
+exports.handler = async (event) => {
   const { pin } = JSON.parse(event.body || "{}");
-  const data = getPinData();
 
-  if (!data.currentPin) {
-    return {
-      statusCode: 401,
-      body: JSON.stringify({ error: "No active PIN" })
-    };
+  if (!activePin || !expiresAt) {
+    return json(false, "No active PIN");
   }
 
-  if (Date.now() > data.expiresAt) {
-    return {
-      statusCode: 401,
-      body: JSON.stringify({ error: "PIN expired" })
-    };
+  if (Date.now() > expiresAt) {
+    activePin = null;
+    expiresAt = null;
+    return json(false, "PIN expired");
   }
 
-  if (pin !== data.currentPin) {
-    return {
-      statusCode: 401,
-      body: JSON.stringify({ error: "Invalid PIN" })
-    };
+  if (pin !== activePin) {
+    return json(false, "Invalid PIN");
   }
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ ok: true })
-  };
+  // PIN OK → invalida subito
+  activePin = null;
+  expiresAt = null;
+
+  return json(true);
 };
+
+function json(ok, error) {
+  return {
+    statusCode: ok ? 200 : 401,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(ok ? { ok: true } : { ok: false, error })
+  };
+}
