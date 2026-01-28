@@ -1,29 +1,22 @@
-let currentPin = null;
+let activePin = null;
 let expiresAt = null;
 
-export const handler = async () => {
+exports.handler = async () => {
   const pin = Math.floor(100000 + Math.random() * 900000).toString();
-  const expires = Date.now() + 5 * 60 * 1000; // 5 minuti
+  const ttl = 5 * 60 * 1000; // 5 minuti
 
-  currentPin = pin;
-  expiresAt = expires;
+  activePin = pin;
+  expiresAt = Date.now() + ttl;
 
-  // Webhook Discord
-  if (process.env.DISCORD_WEBHOOK) {
-    await fetch(process.env.DISCORD_WEBHOOK, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        content: `🔐 **Admin PIN**\n\nPIN: **${pin}**\nScade tra 5 minuti`
-      })
-    });
-  }
+  console.log("NEW PIN:", pin);
 
   return {
     statusCode: 200,
-    body: JSON.stringify({ ok: true })
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      ok: true,
+      pin,
+      expiresAt
+    })
   };
 };
-
-// ESPORTIAMO per verify-pin
-export const getPinData = () => ({ currentPin, expiresAt });
