@@ -1,20 +1,23 @@
-let activePin = null;
+// netlify/functions/generate-pin.js
+
+let activePIN = null;
 let expiresAt = null;
 
-exports.handler = async () => {
+export async function handler() {
+  // genera pin 6 cifre
   const pin = Math.floor(100000 + Math.random() * 900000).toString();
-  const ttl = 5 * 60 * 1000; // 5 minuti
 
-  activePin = pin;
-  expiresAt = Date.now() + ttl;
+  // 5 minuti
+  expiresAt = Date.now() + 5 * 60 * 1000;
+  activePIN = pin;
 
-  // webhook Discord
+  // manda webhook Discord
   if (process.env.DISCORD_WEBHOOK) {
     await fetch(process.env.DISCORD_WEBHOOK, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        content: `🔐 **ADMIN PIN**\nPIN: **${pin}**\nScade in 5 minuti`
+        content: `🔐 **ADMIN PIN**\n\nPIN: **${pin}**\nScade tra 5 minuti`
       })
     });
   }
@@ -27,7 +30,7 @@ exports.handler = async () => {
       expiresAt
     })
   };
-};
+}
 
-// condiviso con verify-pin
-global.__ADMIN_PIN__ = () => ({ activePin, expiresAt });
+// 🔴 ESPORTIAMO LO STATO PER L'ALTRA FUNCTION
+export { activePIN, expiresAt };
