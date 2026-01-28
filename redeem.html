@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Redeem</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="page">
+
+  <div class="page-hero fade-up">
+    <img src="assets/logo.png">
+    <h1>Redeem Key</h1>
+    <p>Insert your Roblox details</p>
+  </div>
+
+  <div class="center-card fade-up fade-delay-1">
+    <input id="placeId" placeholder="Insert Place ID">
+    <input id="username" placeholder="Insert Roblox Username">
+    <button onclick="redeem()">Confirm</button>
+
+    <ul class="tutorial">
+      <li>🎮 Open your Roblox game</li>
+      <li>🔗 Copy the Place ID from the URL</li>
+      <li>🌍 Enable No-Tax Region</li>
+      <li>👤 Insert exact Roblox username</li>
+    </ul>
+
+    <div class="warning">⚠️ Wrong data = no refund</div>
+
+    <div id="result"></div>
+  </div>
+
+</div>
+
+<script type="module" src="js/redeem.js"></script>
+</body>
+</html>
