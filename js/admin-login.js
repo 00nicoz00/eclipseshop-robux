@@ -1,12 +1,17 @@
-const res = await fetch("/.netlify/functions/verify-pin", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ pin }),
+document.getElementById("loginBtn").addEventListener("click", async () => {
+  const pin = document.getElementById("pinInput").value.trim();
+
+  const res = await fetch("/.netlify/functions/verify-pin", {
+    method: "POST",
+    body: JSON.stringify({ pin })
+  });
+
+  const data = await res.json();
+
+  if (data.success) {
+    localStorage.setItem("admin-auth", "true");
+    location.href = "/admin-panel";
+  } else {
+    alert("❌ Invalid PIN");
+  }
 });
-
-const data = await res.json();
-
-if (!data.valid) {
-  showError("Wrong or expired PIN");
-  return;
-}
