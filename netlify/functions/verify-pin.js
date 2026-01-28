@@ -1,30 +1,29 @@
-const admin = require("firebase-admin");
+import { Buffer } from "buffer";
 
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_ADMIN))
-  });
-}
+let currentPin = null;
+let expiresAt = null;
 
-const db = admin.firestore();
+export async function handler(event) {
+  const { pin } = JSON.parse(event.body || "{}");
 
-exports.handler = async (event) => {
-  const { pin } = JSON.parse(event.body);
-
-  const doc = await db.collection("adminPins").doc("current").get();
-  if (!doc.exists) {
-    return { statusCode: 401, body: JSON.stringify({ valid: false }) };
+  if (!currentPin || !expiresAt) {
+    return {
+      statusCode: 401,
+      body: JSON.stringify({ valid: false }),
+    };
   }
 
-  const data = doc.data();
-  const now = admin.firestore.Timestamp.now();
-
-  const valid =
-    pin === data.pin &&
-    data.expiresAt.toMillis() > now.toMillis();
+  if (Date.now() > expiresAt) {
+    currentPin = null;
+    expiresAt = null;
+    return {
+      statusCode: 401,
+      body: JSON.stringify({ valid: false }),
+    };
+  }
 
   return {
     statusCode: 200,
-    body: JSON.stringify({ valid })
+    body: JSON.stringify({ valid: pin === currentPin }),
   };
-};
+}
