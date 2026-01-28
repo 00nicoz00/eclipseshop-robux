@@ -1,10 +1,17 @@
-const btn = document.getElementById("loginBtn");
-const input = document.getElementById("pinInput");
-const error = document.getElementById("errorMsg");
+const pinInput = document.getElementById("pinInput");
+const loginBtn = document.getElementById("loginBtn");
+const errorMsg = document.getElementById("errorMsg");
 
-btn.addEventListener("click", async () => {
-  const pin = input.value.trim();
-  if (pin.length !== 6) {
+loginBtn.addEventListener("click", login);
+
+pinInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") login();
+});
+
+async function login() {
+  const pin = pinInput.value.trim();
+
+  if (!/^\d{6}$/.test(pin)) {
     showError("Invalid PIN format");
     return;
   }
@@ -23,19 +30,20 @@ btn.addEventListener("click", async () => {
       return;
     }
 
-    // salva sessione admin
-    localStorage.setItem("admin_auth", JSON.stringify({
-      pin,
-      expiresAt: data.expiresAt
-    }));
+    localStorage.setItem(
+      "admin_auth",
+      JSON.stringify({
+        expiresAt: data.expiresAt,
+      })
+    );
 
     window.location.href = "/admin-panel";
-  } catch (e) {
+  } catch (err) {
     showError("Server error");
   }
-});
+}
 
-function showError(msg) {
-  error.textContent = msg;
-  error.style.display = "block";
+function showError(text) {
+  errorMsg.textContent = text;
+  errorMsg.style.display = "block";
 }
