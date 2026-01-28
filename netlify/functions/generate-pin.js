@@ -1,45 +1,23 @@
-let currentPin = null;
-let expiresAt = null;
+const store = require("./pin-store");
 
-export async function handler() {
-  const now = Date.now();
+exports.handler = async () => {
+  const pin = Math.floor(100000 + Math.random() * 900000).toString();
+  const expiresAt = Date.now() + 24 * 60 * 60 * 1000; // 24h
 
-  // se esiste ed è ancora valido, NON rigenerare
-  if (currentPin && expiresAt && now < expiresAt) {
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ ok: true }),
-    };
+  store.setPin(pin, expiresAt);
+
+  if (process.env.DISCORD_WEBHOOK) {
+    await fetch(process.env.DISCORD_WEBHOOK, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        content: `🔐 **NEW ADMIN PIN**\nPIN: **${pin}**\nExpires in 24h`
+      })
+    });
   }
-
-  currentPin = Math.floor(100000 + Math.random() * 900000).toString();
-  expiresAt = now + 24 * 60 * 60 * 1000;
-
-  const webhook = process.env.DISCORD_WEBHOOK;
-
-  await fetch(webhook, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      embeds: [
-        {
-          title: "🔐 Eclipse Admin PIN",
-          color: 16711680,
-          fields: [
-            { name: "PIN", value: `**${currentPin}**`, inline: true },
-            {
-              name: "Expires",
-              value: `<t:${Math.floor(expiresAt / 1000)}:R>`,
-              inline: true,
-            },
-          ],
-        },
-      ],
-    }),
-  });
 
   return {
     statusCode: 200,
-    body: JSON.stringify({ ok: true }),
+    body: JSON.stringify({ success: true })
   };
-}
+};
