@@ -1,14 +1,17 @@
+import { getPinData, isExpired } from "./pin-store.js";
+
 export async function handler(event) {
   const { pin } = JSON.parse(event.body || "{}");
+  const stored = getPinData();
 
-  if (!globalThis.ADMIN_PIN || Date.now() > globalThis.PIN_EXPIRES) {
+  if (!stored.pin || isExpired()) {
     return {
       statusCode: 401,
       body: JSON.stringify({ success: false, error: "PIN expired" })
     };
   }
 
-  if (pin !== globalThis.ADMIN_PIN) {
+  if (pin !== stored.pin) {
     return {
       statusCode: 401,
       body: JSON.stringify({ success: false, error: "Invalid PIN" })
