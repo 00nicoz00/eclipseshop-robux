@@ -8,11 +8,19 @@ exports.handler = async () => {
   activePin = pin;
   expiresAt = Date.now() + ttl;
 
-  console.log("NEW PIN:", pin);
+  // webhook Discord
+  if (process.env.DISCORD_WEBHOOK) {
+    await fetch(process.env.DISCORD_WEBHOOK, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        content: `🔐 **ADMIN PIN**\nPIN: **${pin}**\nScade in 5 minuti`
+      })
+    });
+  }
 
   return {
     statusCode: 200,
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       ok: true,
       pin,
@@ -20,3 +28,6 @@ exports.handler = async () => {
     })
   };
 };
+
+// condiviso con verify-pin
+global.__ADMIN_PIN__ = () => ({ activePin, expiresAt });
