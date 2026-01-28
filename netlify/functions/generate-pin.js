@@ -1,31 +1,27 @@
+const { getStore } = require("@netlify/blobs");
 const fetch = require("node-fetch");
-
-const PIN_TTL = 24 * 60 * 60 * 1000; // 24 ore in millisecondi
 
 exports.handler = async () => {
   try {
+    const store = getStore("admin-pin");
+
     const pin = Math.floor(100000 + Math.random() * 900000).toString();
-    const expiresAt = Date.now() + PIN_TTL;
+    const expiresAt = Date.now() + 24 * 60 * 60 * 1000; // 24h
 
-    // salva pin chiamando pin-store
-    await fetch(`${process.env.URL}/.netlify/functions/pin-store`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ pin, expiresAt })
-    });
+    await store.set("current", { pin, expiresAt });
 
-    // webhook discord
+    // Discord webhook
     if (process.env.DISCORD_WEBHOOK) {
       await fetch(process.env.DISCORD_WEBHOOK, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           embeds: [{
-            title: "🔐 Admin PIN Generated",
+            title: "🔐 Admin PIN",
             color: 15158332,
             fields: [
               { name: "PIN", value: `\`${pin}\``, inline: true },
-              { name: "Expires", value: `<t:${Math.floor(expiresAt / 1000)}:R>`, inline: true }
+              { name: "Scade", value: `<t:${Math.floor(expiresAt / 1000)}:R>`, inline: true }
             ]
           }]
         })
@@ -37,10 +33,10 @@ exports.handler = async () => {
       body: JSON.stringify({ ok: true })
     };
 
-  } catch (err) {
+  } catch (e) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: err.message })
+      body: JSON.stringify({ error: e.message })
     };
   }
 };
