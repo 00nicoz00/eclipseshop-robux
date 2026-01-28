@@ -1,8 +1,17 @@
-document.getElementById("loginBtn").onclick = async () => {
-  const pin = document.getElementById("pinInput").value;
-  const error = document.getElementById("error");
+const btn = document.getElementById("loginBtn");
+const input = document.getElementById("pinInput");
+const error = document.getElementById("errorMsg");
 
-  error.textContent = "";
+btn.addEventListener("click", async () => {
+  error.style.display = "none";
+
+  const pin = input.value.trim();
+
+  if (pin.length !== 6) {
+    error.textContent = "Invalid PIN format";
+    error.style.display = "block";
+    return;
+  }
 
   const res = await fetch("/.netlify/functions/verify-pin", {
     method: "POST",
@@ -12,9 +21,12 @@ document.getElementById("loginBtn").onclick = async () => {
 
   const data = await res.json();
 
-  if (data.ok) {
-    window.location.href = "/admin-panel.html";
-  } else {
-    error.textContent = data.error || "Login failed";
+  if (!res.ok) {
+    error.textContent = data.error || "Access denied";
+    error.style.display = "block";
+    return;
   }
-};
+
+  // LOGIN OK
+  window.location.href = "/admin-panel";
+});
