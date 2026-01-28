@@ -1,29 +1,33 @@
-import { Buffer } from "buffer";
+const store = require("./pin-store");
 
-let currentPin = null;
-let expiresAt = null;
-
-export async function handler(event) {
+exports.handler = async (event) => {
   const { pin } = JSON.parse(event.body || "{}");
+  const saved = store.getPin();
 
-  if (!currentPin || !expiresAt) {
+  if (!saved.pin) {
     return {
       statusCode: 401,
-      body: JSON.stringify({ valid: false }),
+      body: JSON.stringify({ success: false, error: "No active PIN" })
     };
   }
 
-  if (Date.now() > expiresAt) {
-    currentPin = null;
-    expiresAt = null;
+  if (Date.now() > saved.expiresAt) {
+    store.clearPin();
     return {
       statusCode: 401,
-      body: JSON.stringify({ valid: false }),
+      body: JSON.stringify({ success: false, error: "PIN expired" })
+    };
+  }
+
+  if (pin !== saved.pin) {
+    return {
+      statusCode: 401,
+      body: JSON.stringify({ success: false, error: "Invalid PIN" })
     };
   }
 
   return {
     statusCode: 200,
-    body: JSON.stringify({ valid: pin === currentPin }),
+    body: JSON.stringify({ success: true })
   };
-}
+};
