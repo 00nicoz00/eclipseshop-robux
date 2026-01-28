@@ -1,18 +1,10 @@
-import { getPin, clearPin } from "./pin-store.js";
+import { getPinData } from "./generate-pin.js";
 
-export async function handler(event) {
+export const handler = async (event) => {
   const { pin } = JSON.parse(event.body || "{}");
+  const data = getPinData();
 
-  if (!pin) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({ error: "Missing PIN" })
-    };
-  }
-
-  const data = await getPin();
-
-  if (!data) {
+  if (!data.currentPin) {
     return {
       statusCode: 401,
       body: JSON.stringify({ error: "No active PIN" })
@@ -20,24 +12,21 @@ export async function handler(event) {
   }
 
   if (Date.now() > data.expiresAt) {
-    await clearPin();
     return {
       statusCode: 401,
       body: JSON.stringify({ error: "PIN expired" })
     };
   }
 
-  if (pin !== data.pin) {
+  if (pin !== data.currentPin) {
     return {
       statusCode: 401,
       body: JSON.stringify({ error: "Invalid PIN" })
     };
   }
 
-  await clearPin();
-
   return {
     statusCode: 200,
     body: JSON.stringify({ ok: true })
   };
-}
+};
