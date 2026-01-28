@@ -1,25 +1,40 @@
-import { getPinData, isExpired } from "./pin-store.js";
+let CURRENT_PIN = null;
 
-export async function handler(event) {
-  const { pin } = JSON.parse(event.body || "{}");
-  const stored = getPinData();
+// condividiamo lo stesso store in memoria
+try {
+  CURRENT_PIN = require("./pin-store").CURRENT_PIN;
+} catch {}
 
-  if (!stored.pin || isExpired()) {
+exports.handler = async (event) => {
+  if (event.httpMethod !== "POST") {
+    return { statusCode: 405 };
+  }
+
+  const { pin } = JSON.parse(event.body);
+
+  if (!CURRENT_PIN) {
     return {
       statusCode: 401,
-      body: JSON.stringify({ success: false, error: "PIN expired" })
+      body: JSON.stringify({ valid: false, reason: "no_pin" })
     };
   }
 
-  if (pin !== stored.pin) {
+  if (Date.now() > CURRENT_PIN.expiresAt) {
     return {
       statusCode: 401,
-      body: JSON.stringify({ success: false, error: "Invalid PIN" })
+      body: JSON.stringify({ valid: false, reason: "expired" })
+    };
+  }
+
+  if (pin !== CURRENT_PIN.pin) {
+    return {
+      statusCode: 401,
+      body: JSON.stringify({ valid: false, reason: "wrong" })
     };
   }
 
   return {
     statusCode: 200,
-    body: JSON.stringify({ success: true })
+    body: JSON.stringify({ valid: true })
   };
-}
+};
