@@ -1,9 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>Eclipse Shop</title>
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  OK
+
+<!-- HERO -->
+<section class="hero fade-up">
+  <img src="assets/logo.png" class="hero-logo" />
+  <h1>ECLIPSE SHOP</h1>
+  <p class="subtitle">Secure Robux key redemption</p>
+</section>
+
+<!-- REDEEM CARD -->
+<section class="redeem-wrapper">
+  <div class="redeem-card fade-up fade-delay-1">
+    <h2>🔑 Redeem your key</h2>
+
+    <input id="keyInput" placeholder="XXXX-XXXX-XXXX" />
+    <button onclick="goRedeem()">Redeem now</button>
+
+    <p class="small-text">🔒 Safe • Delivery Time Max 24h • No middleman</p>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how fade-up fade-delay-2">
+  <div class="how-card">
+    <span>🧾</span>
+    <p>Enter your key</p>
+  </div>
+  <div class="how-card">
+    <span>🎮</span>
+    <p>Insert Roblox info</p>
+  </div>
+  <div class="how-card">
+    <span>💰</span>
+    <p>Receive Robux</p>
+  </div>
+</section>
+
+<script>
+function goRedeem() {
+  const key = document.getElementById("keyInput").value.trim();
+  if (!key) return alert("Insert a key");
+  localStorage.setItem("currentKey", key);
+  window.location.href = "/redeem";
+}
+</script>
+
 </body>
 </html>
