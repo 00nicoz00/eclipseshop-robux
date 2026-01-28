@@ -1,8 +1,8 @@
-document.getElementById("loginBtn").addEventListener("click", async () => {
+document.getElementById("loginBtn").onclick = async () => {
   const pin = document.getElementById("pinInput").value;
-  const error = document.getElementById("errorMsg");
+  const error = document.getElementById("error");
 
-  error.style.display = "none";
+  error.textContent = "";
 
   const res = await fetch("/.netlify/functions/verify-pin", {
     method: "POST",
@@ -13,9 +13,8 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
   const data = await res.json();
 
   if (data.ok) {
-    window.location.href = "/admin-panel";
+    window.location.href = "/admin-panel.html";
   } else {
-    error.textContent = data.error || "Access denied";
-    error.style.display = "block";
+    error.textContent = data.error || "Login failed";
   }
-});
+};
