@@ -1,35 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Admin Login | Eclipse Shop</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="/css/style.css" />
+  <meta charset="UTF-8">
+  <title>Admin Login</title>
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
-  <div class="page">
-    <div class="page-hero fade-up">
-      <img src="/assets/logo.png" alt="Logo" />
-      <h1>Admin Access</h1>
-      <p>Enter the 6-digit PIN</p>
-    </div>
+<div class="center-card">
+  <h2>Admin Login</h2>
+  <input id="pin" placeholder="Enter PIN">
+  <button id="loginBtn">Access</button>
+  <p id="error" class="warning"></p>
+</div>
 
-    <div class="center-card fade-up fade-delay-1">
-      <input
-        id="pinInput"
-        type="password"
-        inputmode="numeric"
-        maxlength="6"
-        placeholder="Enter 6-digit PIN"
-      />
-
-      <button id="loginBtn">Access</button>
-
-      <p id="errorMsg" class="warning" style="display:none;"></p>
-    </div>
-  </div>
-
-  <script src="/js/admin-login.js"></script>
+<script src="/js/admin-login.js"></script>
 </body>
 </html>
