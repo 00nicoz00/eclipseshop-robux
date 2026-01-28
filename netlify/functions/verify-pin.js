@@ -1,9 +1,4 @@
-let CURRENT_PIN = null;
-
-// condividiamo lo stesso store in memoria
-try {
-  CURRENT_PIN = require("./pin-store").CURRENT_PIN;
-} catch {}
+const { getStore } = require("@netlify/blobs");
 
 exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
@@ -11,22 +6,24 @@ exports.handler = async (event) => {
   }
 
   const { pin } = JSON.parse(event.body);
+  const store = getStore("admin-pin");
+  const data = await store.get("current");
 
-  if (!CURRENT_PIN) {
+  if (!data) {
     return {
       statusCode: 401,
       body: JSON.stringify({ valid: false, reason: "no_pin" })
     };
   }
 
-  if (Date.now() > CURRENT_PIN.expiresAt) {
+  if (Date.now() > data.expiresAt) {
     return {
       statusCode: 401,
       body: JSON.stringify({ valid: false, reason: "expired" })
     };
   }
 
-  if (pin !== CURRENT_PIN.pin) {
+  if (pin !== data.pin) {
     return {
       statusCode: 401,
       body: JSON.stringify({ valid: false, reason: "wrong" })
