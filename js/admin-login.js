@@ -1,23 +1,17 @@
-document.getElementById("loginBtn").addEventListener("click", login);
-
-async function login() {
-  const pin = document.getElementById("pinInput").value;
-  const error = document.getElementById("errorMsg");
-
-  error.style.display = "none";
+document.getElementById("loginBtn").onclick = async () => {
+  const pin = document.getElementById("pin").value;
 
   const res = await fetch("/.netlify/functions/verify-pin", {
     method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ pin })
   });
 
   const data = await res.json();
 
-  if (data.success) {
-    localStorage.setItem("admin-auth", "true");
+  if (data.ok) {
     location.href = "/admin-panel.html";
   } else {
-    error.innerText = data.error || "Invalid PIN";
-    error.style.display = "block";
+    document.getElementById("error").textContent = data.error;
   }
-}
+};
