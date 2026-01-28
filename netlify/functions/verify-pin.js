@@ -1,6 +1,4 @@
-import { getPinStore, PIN_KEY } from "./pin-store.js";
-
-export const handler = async (event) => {
+export async function handler(event) {
   try {
     const { pin } = JSON.parse(event.body || "{}");
 
@@ -11,24 +9,24 @@ export const handler = async (event) => {
       };
     }
 
-    const store = getPinStore();
-    const data = await store.getJSON(PIN_KEY);
+    const storedPin = process.env.ADMIN_PIN;
+    const expiresAt = Number(process.env.ADMIN_PIN_EXPIRES);
 
-    if (!data) {
+    if (!storedPin || !expiresAt) {
       return {
         statusCode: 401,
         body: JSON.stringify({ error: "No active PIN" })
       };
     }
 
-    if (Date.now() > data.expiresAt) {
+    if (Date.now() > expiresAt) {
       return {
         statusCode: 401,
         body: JSON.stringify({ error: "PIN expired" })
       };
     }
 
-    if (pin !== data.pin) {
+    if (pin !== storedPin) {
       return {
         statusCode: 401,
         body: JSON.stringify({ error: "Invalid PIN" })
@@ -39,11 +37,10 @@ export const handler = async (event) => {
       statusCode: 200,
       body: JSON.stringify({ ok: true })
     };
-
-  } catch (err) {
+  } catch {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: err.message })
+      body: JSON.stringify({ error: "Server error" })
     };
   }
-};
+}
