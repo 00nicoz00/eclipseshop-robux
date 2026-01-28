@@ -1,59 +1,35 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Admin</title>
-  <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8" />
+  <title>Admin Login | Eclipse Shop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
 
-<div class="page">
+  <div class="page">
+    <div class="page-hero fade-up">
+      <img src="/assets/logo.png" alt="Logo" />
+      <h1>Admin Access</h1>
+      <p>Enter the 6-digit PIN</p>
+    </div>
 
-  <!-- PIN -->
-  <div class="page-hero fade-up">
-    <img src="assets/logo.png">
-    <h1>Admin Access</h1>
-    <p>Secure daily PIN</p>
+    <div class="center-card fade-up fade-delay-1">
+      <input
+        id="pinInput"
+        type="password"
+        inputmode="numeric"
+        maxlength="6"
+        placeholder="Enter 6-digit PIN"
+      />
+
+      <button id="loginBtn">Access</button>
+
+      <p id="errorMsg" class="warning" style="display:none;"></p>
+    </div>
   </div>
 
-  <div class="center-card fade-up fade-delay-1" id="pinBox">
-    <input id="pinInput" placeholder="Enter 6-digit PIN">
-    <button onclick="verify()">Access</button>
-  </div>
-
-  <!-- ADMIN PANEL -->
-  <div class="center-card fade-up fade-delay-2" id="adminPanel" style="display:none;">
-    <h3>Create Keys</h3>
-
-    <input id="robux" placeholder="Robux amount">
-    <input id="amount" placeholder="Number of keys">
-    <button onclick="createKeys()">Generate</button>
-
-    <h3 style="margin-top:30px;">All Keys</h3>
-    <div id="keysList"></div>
-  </div>
-
-</div>
-
-<script type="module" src="js/admin.js"></script>
-<script>
-async function verify() {
-  const pin = document.getElementById("pinInput").value;
-
-  const res = await fetch("/.netlify/functions/verify-pin", {
-    method: "POST",
-    body: JSON.stringify({ pin })
-  });
-
-  const data = await res.json();
-
-  if (data.valid) {
-    document.getElementById("pinBox").style.display = "none";
-    document.getElementById("adminPanel").style.display = "block";
-  } else {
-    alert("Invalid PIN");
-  }
-}
-</script>
-
+  <script src="/js/admin-login.js"></script>
 </body>
 </html>
