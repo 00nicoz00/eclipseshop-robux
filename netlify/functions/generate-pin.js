@@ -1,23 +1,26 @@
-const store = require("./pin-store");
+export async function handler() {
+  const now = Date.now();
 
-exports.handler = async () => {
-  const pin = Math.floor(100000 + Math.random() * 900000).toString();
-  const expiresAt = Date.now() + 24 * 60 * 60 * 1000; // 24h
+  if (!globalThis.ADMIN_PIN || now > globalThis.PIN_EXPIRES) {
+    const pin = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = now + 24 * 60 * 60 * 1000;
 
-  store.setPin(pin, expiresAt);
+    globalThis.ADMIN_PIN = pin;
+    globalThis.PIN_EXPIRES = expiresAt;
 
-  if (process.env.DISCORD_WEBHOOK) {
     await fetch(process.env.DISCORD_WEBHOOK, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        content: `🔐 **NEW ADMIN PIN**\nPIN: **${pin}**\nExpires in 24h`
+        content: `🔐 **ADMIN PIN**\nPIN: **${pin}**\nScade: <t:${Math.floor(expiresAt / 1000)}:R>`
       })
     });
   }
 
   return {
     statusCode: 200,
-    body: JSON.stringify({ success: true })
+    body: JSON.stringify({
+      expiresAt: globalThis.PIN_EXPIRES
+    })
   };
-};
+}
