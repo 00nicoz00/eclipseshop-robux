@@ -7,55 +7,59 @@
   <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
+  <div class="page">
 
-<div class="page">
-  <div class="page-hero fade-up">
-    <img src="/assets/logo.png" alt="Logo" />
-    <h1>Admin Dashboard</h1>
-    <p>Manage keys & monitor activity</p>
-  </div>
-
-  <!-- STATS -->
-  <div class="how fade-up fade-delay-1">
-    <div class="how-card">
-      <span>🔑</span>
-      <p><b id="totalKeys">0</b><br>Total Keys</p>
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card">
+        🔑
+        <span id="totalKeys">0</span>
+        <p>Total Keys</p>
+      </div>
+      <div class="stat-card">
+        ✅
+        <span id="redeemedKeys">0</span>
+        <p>Redeemed</p>
+      </div>
+      <div class="stat-card">
+        ⏳
+        <span id="activeKeys">0</span>
+        <p>Active</p>
+      </div>
     </div>
-    <div class="how-card">
-      <span>✅</span>
-      <p><b id="redeemedKeys">0</b><br>Redeemed</p>
+
+    <!-- CREATE KEY -->
+    <div class="center-card">
+      <h2>Create Key</h2>
+      <input id="robuxAmount" type="number" placeholder="Robux amount">
+      <label class="checkbox">
+        <input type="checkbox" id="unlimited">
+        Unlimited
+      </label>
+      <button id="createKeyBtn">Create Key</button>
     </div>
-    <div class="how-card">
-      <span>⏳</span>
-      <p><b id="activeKeys">0</b><br>Active</p>
+
+    <!-- SEARCH -->
+    <div class="center-card">
+      <h2>Search Key</h2>
+      <input id="searchInput" placeholder="Enter key...">
     </div>
+
+    <!-- KEYS LIST -->
+    <div class="keys-grid">
+      <div class="keys-column">
+        <h3>Active Keys</h3>
+        <div id="activeKeysList"></div>
+      </div>
+
+      <div class="keys-column">
+        <h3>Redeemed Keys</h3>
+        <div id="redeemedKeysList"></div>
+      </div>
+    </div>
+
   </div>
 
-  <!-- CREATE KEY -->
-  <div class="center-card fade-up fade-delay-2">
-    <h2>Create Key</h2>
-
-    <input id="robuxInput" type="number" placeholder="Robux amount" />
-    <label style="display:block;margin-bottom:10px;">
-      <input type="checkbox" id="unlimitedInput" /> Unlimited
-    </label>
-
-    <button id="createKeyBtn">Create Key</button>
-    <p class="small-text" id="createMsg"></p>
-  </div>
-
-  <!-- SEARCH -->
-  <div class="center-card fade-up fade-delay-3">
-    <h2>Search Key</h2>
-    <input id="searchInput" placeholder="Enter key..." />
-    <div id="results"></div>
-  </div>
-
-  <button onclick="logout()" style="max-width:300px;margin:40px auto;">
-    Logout
-  </button>
-</div>
-
-<script type="module" src="/js/admin-panel.js"></script>
+  <script type="module" src="/js/admin-panel.js"></script>
 </body>
 </html>
