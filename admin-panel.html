@@ -1,16 +1,11 @@
-<div class="center-card">
-  <h1>Admin Panel</h1>
+<div class="page">
+  <div class="center-card">
+    <h1>Admin Dashboard</h1>
 
-  <div id="stats" class="small-text"></div>
+    <input id="search" placeholder="Search key..." />
 
-  <input id="robux" placeholder="Robux amount">
-  <label>
-    <input type="checkbox" id="unlimited"> Unlimited
-  </label>
-
-  <button id="createKey">Create Key</button>
-
-  <div id="keys"></div>
-
-  <button onclick="logout()">Logout</button>
+    <div id="keyList"></div>
+  </div>
 </div>
+
+<script type="module" src="/js/admin-panel.js"></script>
