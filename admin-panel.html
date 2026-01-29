@@ -1,11 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard | Eclipse Shop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
 <div class="page">
-  <div class="center-card">
+  <div class="page-hero fade-up">
+    <img src="/assets/logo.png" alt="Logo" />
     <h1>Admin Dashboard</h1>
-
-    <input id="search" placeholder="Search key..." />
-
-    <div id="keyList"></div>
+    <p>Manage keys & monitor activity</p>
   </div>
+
+  <!-- STATS -->
+  <div class="how fade-up fade-delay-1">
+    <div class="how-card">
+      <span>🔑</span>
+      <p><b id="totalKeys">0</b><br>Total Keys</p>
+    </div>
+    <div class="how-card">
+      <span>✅</span>
+      <p><b id="redeemedKeys">0</b><br>Redeemed</p>
+    </div>
+    <div class="how-card">
+      <span>⏳</span>
+      <p><b id="activeKeys">0</b><br>Active</p>
+    </div>
+  </div>
+
+  <!-- CREATE KEY -->
+  <div class="center-card fade-up fade-delay-2">
+    <h2>Create Key</h2>
+
+    <input id="robuxInput" type="number" placeholder="Robux amount" />
+    <label style="display:block;margin-bottom:10px;">
+      <input type="checkbox" id="unlimitedInput" /> Unlimited
+    </label>
+
+    <button id="createKeyBtn">Create Key</button>
+    <p class="small-text" id="createMsg"></p>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="center-card fade-up fade-delay-3">
+    <h2>Search Key</h2>
+    <input id="searchInput" placeholder="Enter key..." />
+    <div id="results"></div>
+  </div>
+
+  <button onclick="logout()" style="max-width:300px;margin:40px auto;">
+    Logout
+  </button>
 </div>
 
 <script type="module" src="/js/admin-panel.js"></script>
+</body>
+</html>
