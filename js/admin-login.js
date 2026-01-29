@@ -1,25 +1,18 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const btn = document.getElementById("loginBtn");
-  const input = document.getElementById("pinInput");
-  const error = document.getElementById("errorMsg");
+const btn = document.getElementById("loginBtn");
+const msg = document.getElementById("msg");
 
-  btn.addEventListener("click", async () => {
-    error.style.display = "none";
+btn.addEventListener("click", async () => {
+  msg.textContent = "";
 
-    const pin = input.value.trim();
-    if (!pin) return;
+  const res = await fetch("/.netlify/functions/generate-pin");
+  const data = await res.json();
 
-    const res = await fetch("/.netlify/functions/verify-pin", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ pin })
-    });
+  const inputPin = document.getElementById("pinInput").value;
 
-    if (res.ok) {
-      window.location.href = "/admin-panel.html";
-    } else {
-      error.textContent = "Invalid or expired PIN";
-      error.style.display = "block";
-    }
-  });
+  if (inputPin === data.pin && Date.now() < data.expiresAt) {
+    sessionStorage.setItem("admin", "true");
+    window.location.href = "/admin-panel.html";
+  } else {
+    msg.textContent = "Invalid or expired PIN";
+  }
 });
