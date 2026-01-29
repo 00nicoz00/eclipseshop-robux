@@ -1,67 +1,41 @@
-if (!localStorage.getItem("admin")) {
-  location.href = "/admin";
-}
+import { db } from "./firebase-client.js";
+import {
+  collection,
+  getDocs,
+  deleteDoc,
+  doc
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-async function loadStats() {
-  const res = await fetch("/.netlify/functions/get-stats");
-  const s = await res.json();
+const list = document.getElementById("keyList");
+const search = document.getElementById("search");
 
-  document.getElementById("stats").innerHTML = `
-    Total: ${s.total} |
-    Active: ${s.active} |
-    Redeemed: ${s.redeemed}
-  `;
-}
+async function loadKeys(filter = "") {
+  list.innerHTML = "";
+  const snap = await getDocs(collection(db, "keys"));
 
-async function loadKeys() {
-  const res = await fetch("/.netlify/functions/get-keys");
-  const data = await res.json();
+  snap.forEach(d => {
+    const k = d.data();
+    if (!k.code.includes(filter)) return;
 
-  const container = document.getElementById("keys");
-  container.innerHTML = "";
-
-  data.forEach(k => {
-    container.innerHTML += `
-      <div class="key-row">
-        <span>${k.code}</span>
-        <span class="badge ${k.redeemed ? "red" : "green"}">
-          ${k.redeemed ? "USED" : "ACTIVE"}
-        </span>
-        <button onclick="deleteKey('${k.id}')">🗑️</button>
-      </div>
+    const row = document.createElement("div");
+    row.className = "key-row";
+    row.innerHTML = `
+      <div>${k.code}</div>
+      <div>${k.redeemed ? "✅ Redeemed" : "🟢 Active"}</div>
+      <button data-id="${d.id}">🗑️</button>
     `;
+
+    row.querySelector("button").onclick = async () => {
+      await fetch("/.netlify/functions/delete-key", {
+        method: "POST",
+        body: JSON.stringify({ id: d.id })
+      });
+      loadKeys(search.value);
+    };
+
+    list.appendChild(row);
   });
 }
 
-async function deleteKey(id) {
-  if (!confirm("Delete this key?")) return;
-
-  await fetch("/.netlify/functions/delete-key", {
-    method: "POST",
-    body: JSON.stringify({ id })
-  });
-
-  loadKeys();
-  loadStats();
-}
-
-document.getElementById("createKey").onclick = async () => {
-  const robux = document.getElementById("robux").value;
-  const unlimited = document.getElementById("unlimited").checked;
-
-  await fetch("/.netlify/functions/create-key", {
-    method: "POST",
-    body: JSON.stringify({ robux, unlimited })
-  });
-
-  loadKeys();
-  loadStats();
-};
-
-function logout() {
-  localStorage.removeItem("admin");
-  location.href = "/admin";
-}
-
+search.oninput = e => loadKeys(e.target.value);
 loadKeys();
-loadStats();
