@@ -1,18 +1,22 @@
-const btn = document.getElementById("loginBtn");
-const msg = document.getElementById("msg");
+document.getElementById("login").addEventListener("click", async () => {
+  const username = document.getElementById("user").value;
+  const password = document.getElementById("pass").value;
+  const msg = document.getElementById("msg");
 
-btn.addEventListener("click", async () => {
-  msg.textContent = "";
+  msg.textContent = "Loading...";
 
-  const res = await fetch("/.netlify/functions/generate-pin");
+  const res = await fetch("/.netlify/functions/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password })
+  });
+
   const data = await res.json();
 
-  const inputPin = document.getElementById("pinInput").value;
-
-  if (inputPin === data.pin && Date.now() < data.expiresAt) {
-    sessionStorage.setItem("admin", "true");
+  if (data.ok) {
+    localStorage.setItem("admin-auth", "true");
     window.location.href = "/admin-panel.html";
   } else {
-    msg.textContent = "Invalid or expired PIN";
+    msg.textContent = "Invalid username or password";
   }
 });
