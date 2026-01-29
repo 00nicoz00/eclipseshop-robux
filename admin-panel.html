@@ -1,78 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Admin Dashboard | Eclipse Shop</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="/css/style.css" />
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
-  <div class="page">
+<body class="page">
 
-    <!-- HERO -->
-    <div class="page-hero fade-up">
-      <img src="/assets/logo.png" alt="Logo">
-      <h1>Admin Dashboard</h1>
-      <p>Manage keys & redemptions</p>
-    </div>
-
-    <!-- STATS -->
-    <div class="stats-row fade-up fade-delay-1">
-      <div class="stat-card">
-        🔑
-        <h3 id="totalKeys">0</h3>
-        <span>Total Keys</span>
-      </div>
-      <div class="stat-card">
-        ✅
-        <h3 id="redeemedKeys">0</h3>
-        <span>Redeemed</span>
-      </div>
-      <div class="stat-card">
-        ⏳
-        <h3 id="activeKeys">0</h3>
-        <span>Active</span>
-      </div>
-    </div>
-
-    <!-- CREATE KEY -->
-    <div class="center-card fade-up fade-delay-2">
-      <h2>Create Key</h2>
-
-      <input id="robuxInput" type="number" placeholder="Robux amount" />
-      <label class="checkbox-row">
-        <input type="checkbox" id="unlimitedCheck" />
-        Unlimited
-      </label>
-
-      <button id="createKeyBtn">Create Key</button>
-      <p id="createMsg" class="small-text"></p>
-    </div>
-
-    <!-- SEARCH -->
-    <div class="center-card fade-up fade-delay-3">
-      <h2>Search Key</h2>
-      <input id="searchInput" placeholder="Enter key..." />
-    </div>
-
-    <!-- LISTS -->
-    <div class="key-lists">
-
-      <div class="key-column">
-        <h3>🟢 Active Keys</h3>
-        <div id="activeList"></div>
-      </div>
-
-      <div class="key-column">
-        <h3>🔴 Redeemed Keys</h3>
-        <div id="redeemedList"></div>
-      </div>
-
-    </div>
-
+  <div class="page-hero">
+    <h1>Admin Dashboard</h1>
+    <p>Key management</p>
   </div>
 
-  <script src="/js/admin-panel.js"></script>
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat-box">
+      🔑
+      <span id="totalKeys">0</span>
+      <p>Total Keys</p>
+    </div>
+    <div class="stat-box">
+      ✅
+      <span id="redeemedKeys">0</span>
+      <p>Redeemed</p>
+    </div>
+    <div class="stat-box">
+      ⏳
+      <span id="activeKeys">0</span>
+      <p>Active</p>
+    </div>
+  </div>
+
+  <!-- CREATE KEY -->
+  <div class="center-card">
+    <h2>Create Key</h2>
+
+    <input id="robuxInput" type="number" placeholder="Robux amount">
+    <input id="amountInput" type="number" placeholder="Number of keys" value="1">
+
+    <label class="checkbox">
+      <input type="checkbox" id="unlimitedCheck">
+      Unlimited
+    </label>
+
+    <button id="createKeyBtn">Create Key</button>
+    <p id="createMsg" class="small-text"></p>
+  </div>
+
+  <!-- LISTS -->
+  <div class="keys-layout">
+    <div>
+      <h3>🟢 Active Keys</h3>
+      <div id="activeList"></div>
+    </div>
+
+    <div>
+      <h3>🔴 Redeemed Keys</h3>
+      <div id="redeemedList"></div>
+    </div>
+  </div>
+
+  <script type="module" src="js/admin-panel.js"></script>
 </body>
 </html>
