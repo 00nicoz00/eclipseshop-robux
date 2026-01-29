@@ -1,219 +1,338 @@
-/* =========================
+/* =====================================================
    RESET & BASE
-========================= */
+===================================================== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Inter", system-ui, sans-serif;
+    font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-body {
+html, body {
+    width: 100%;
+    height: 100%;
+    color: #ffffff;
+}
+
+/* =====================================================
+   GENERIC PAGE WRAPPER (NON TOCCA BACKGROUND)
+===================================================== */
+.page-wrapper {
     min-height: 100vh;
-    background: linear-gradient(135deg, #2b0000, #7a0000, #000);
-    color: #fff;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-/* =========================
-   GLOBAL CONTAINER
-========================= */
-.container {
-    width: 100%;
-    max-width: 1200px;
     padding: 40px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 30px;
 }
 
-/* =========================
-   TITLES
-========================= */
-h1, h2, h3 {
-    text-align: center;
+/* =====================================================
+   TYPOGRAPHY
+===================================================== */
+h1 {
+    font-size: 2.6rem;
+    font-weight: 700;
     letter-spacing: 1px;
 }
 
-h1 {
-    font-size: 2.6rem;
-}
-
 h2 {
-    font-size: 1.6rem;
-    opacity: 0.9;
+    font-size: 1.8rem;
+    font-weight: 600;
 }
 
-/* =========================
-   CARDS (GENERAL)
-========================= */
+h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+p {
+    font-size: 0.95rem;
+    opacity: 0.85;
+}
+
+/* =====================================================
+   GLOBAL CARD STYLE
+===================================================== */
 .card {
-    width: 100%;
-    max-width: 520px;
-    background: rgba(0,0,0,0.55);
-    backdrop-filter: blur(10px);
-    border-radius: 18px;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
     padding: 25px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    align-items: center;
 }
 
-/* =========================
+/* =====================================================
    INPUTS
-========================= */
-input {
+===================================================== */
+input,
+select {
     width: 100%;
     padding: 14px 16px;
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.15);
-    background: rgba(0,0,0,0.6);
-    color: #fff;
+    color: #ffffff;
     font-size: 1rem;
     outline: none;
 }
 
 input::placeholder {
-    color: rgba(255,255,255,0.4);
+    color: rgba(255, 255, 255, 0.4);
 }
 
 input:focus {
     border-color: #ff0000;
 }
 
-/* =========================
+/* =====================================================
    BUTTONS
-========================= */
+===================================================== */
 button {
     width: 100%;
     padding: 14px;
     border-radius: 14px;
     border: none;
-    background: linear-gradient(135deg, #ff0000, #b00000);
-    color: #fff;
+    background: linear-gradient(135deg, #ff0000, #b10000);
+    color: #ffffff;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    transition: all 0.2s ease;
 }
 
 button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(255,0,0,0.4);
+    box-shadow: 0 12px 30px rgba(255, 0, 0, 0.45);
 }
 
-/* =========================
-   STATS (ADMIN TOP)
-========================= */
-.stats {
+button:active {
+    transform: translateY(0);
+}
+
+/* =====================================================
+   AUTH / LOGIN / REDEEM BOX
+===================================================== */
+.auth-container {
     width: 100%;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    max-width: 420px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
     gap: 20px;
 }
 
-.stat-box {
-    background: rgba(0,0,0,0.6);
-    border-radius: 16px;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+.auth-logo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto;
 }
 
-.stat-box span {
-    font-size: 1.8rem;
-    font-weight: 700;
-    display: block;
-}
-
-.stat-box p {
-    opacity: 0.7;
-    margin-top: 6px;
-}
-
-/* =========================
-   ADMIN PANEL LAYOUT
-========================= */
-.admin-panel {
+.auth-logo img {
     width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.auth-container .card {
     display: flex;
     flex-direction: column;
-    gap: 40px;
-    align-items: center;
+    gap: 15px;
 }
 
-/* =========================
-   CREATE KEY (CENTER)
-========================= */
-.create-key {
+/* =====================================================
+   HOME / REDEEM LANDING
+===================================================== */
+.home-container {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+}
+
+.home-left {
+    text-align: center;
+}
+
+.home-right {
+    width: 100%;
+    max-width: 360px;
+}
+
+/* =====================================================
+   ADMIN DASHBOARD WRAPPER
+===================================================== */
+.admin-dashboard {
+    width: 100%;
+    max-width: 1300px;
+    display: flex;
+    flex-direction: column;
+    gap: 45px;
+}
+
+/* =====================================================
+   ADMIN HEADER
+===================================================== */
+.admin-header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.admin-header p {
+    opacity: 0.7;
+}
+
+/* =====================================================
+   ADMIN STATS
+===================================================== */
+.admin-stats {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    min-width: 180px;
+    padding: 22px;
+    background: rgba(0, 0, 0, 0.45);
+    border-radius: 18px;
+    text-align: center;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+}
+
+.stat-card span {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.stat-card p {
+    font-size: 0.9rem;
+    opacity: 0.75;
+}
+
+/* =====================================================
+   CREATE KEY (CENTERED)
+===================================================== */
+.create-key-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.create-key-box {
+    width: 100%;
     max-width: 420px;
 }
 
-/* =========================
-   KEYS SECTION
-========================= */
-.keys-wrapper {
-    width: 100%;
+.create-key-box .card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* =====================================================
+   KEYS SECTION (LEFT / RIGHT)
+===================================================== */
+.keys-section {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 30px;
 }
 
-/* LEFT */
-.active-keys,
-.redeemed-keys {
-    background: rgba(0,0,0,0.55);
-    border-radius: 18px;
-    padding: 20px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.55);
+.keys-box {
+    background: rgba(0, 0, 0, 0.45);
+    border-radius: 20px;
+    padding: 22px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
 }
 
-.active-keys h3,
-.redeemed-keys h3 {
+.keys-box h3 {
     text-align: center;
-    margin-bottom: 15px;
-    font-size: 1.2rem;
+    margin-bottom: 18px;
 }
 
-/* LIST */
-.key-list {
+/* =====================================================
+   KEYS LIST
+===================================================== */
+.keys-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
 }
 
-.key-list li {
-    background: rgba(255,255,255,0.05);
-    padding: 10px 14px;
-    border-radius: 10px;
-    font-size: 0.95rem;
+.keys-list li {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 0.95rem;
 }
 
-/* =========================
-   STATUS COLORS
-========================= */
-.active {
+/* =====================================================
+   KEY STATUS COLORS
+===================================================== */
+.key-active {
     color: #00ff88;
 }
 
-.redeemed {
+.key-redeemed {
     color: #ff4444;
 }
 
-/* =========================
+/* =====================================================
+   DELETE BUTTON (TRASH)
+===================================================== */
+.key-delete {
+    background: none;
+    border: none;
+    color: #ff4444;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* =====================================================
+   INFO LIST (REDEEM PAGE)
+===================================================== */
+.info-list {
+    margin-top: 10px;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.85rem;
+    opacity: 0.85;
+}
+
+/* =====================================================
    RESPONSIVE
-========================= */
+===================================================== */
+@media (max-width: 1100px) {
+    .home-container {
+        flex-direction: column;
+    }
+}
+
 @media (max-width: 900px) {
-    .keys-wrapper {
+    .keys-section {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 500px) {
+    h1 {
+        font-size: 2.2rem;
+    }
+
+    .stat-card {
+        min-width: 150px;
     }
 }
