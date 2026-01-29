@@ -2,23 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Admin Login</title>
+  <title>Admin Login | Eclipse Shop</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
 
-<div class="page">
-  <div class="center-card">
-    <h1>Admin Login</h1>
+  <div class="page">
+    <div class="center-card">
+      <h1>Admin Login</h1>
 
-    <input id="pinInput" maxlength="6" placeholder="Enter PIN" />
-    <button id="loginBtn">Access</button>
+      <input
+        id="pinInput"
+        type="password"
+        maxlength="6"
+        placeholder="Enter 6-digit PIN"
+      />
 
-    <p id="error" class="warning"></p>
+      <button id="loginBtn">Access</button>
+
+      <!-- QUESTO È QUELLO CHE MANCAVA -->
+      <p id="errorMsg" style="display:none;color:yellow;"></p>
+    </div>
   </div>
-</div>
 
-<script src="/js/admin-login.js"></script>
+  <script src="/js/admin-login.js"></script>
 </body>
 </html>
