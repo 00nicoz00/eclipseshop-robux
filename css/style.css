@@ -371,4 +371,22 @@ button:active {
   filter: brightness(1.2);
 }
 
+.key-item {
+  animation: fadeUp 0.4s ease forwards;
+}
+
+.stat-card,
+.center-card,
+.keys-column {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.stat-card:hover,
+.center-card:hover,
+.keys-column:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 0 60px rgba(255,0,0,0.5);
+}
+
+
 
