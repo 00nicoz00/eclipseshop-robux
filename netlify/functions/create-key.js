@@ -12,34 +12,28 @@ if (!admin.apps.length) {
 
 const db = admin.firestore();
 
-function generateKey() {
-  return "XXXX-XXXX-XXXX".replace(/X/g, () =>
-    Math.floor(Math.random() * 36).toString(36).toUpperCase()
-  );
+function genKey() {
+  return Math.random().toString(36).substring(2, 6).toUpperCase() + "-" +
+         Math.random().toString(36).substring(2, 6).toUpperCase();
 }
 
 exports.handler = async (event) => {
-  if (event.httpMethod !== "POST") {
-    return { statusCode: 405 };
+  const { robux, unlimited, amount } = JSON.parse(event.body);
+
+  for (let i = 0; i < amount; i++) {
+    await db.collection("keys").add({
+      code: genKey(),
+      robux: unlimited ? null : Number(robux),
+      unlimited,
+      redeemed: false,
+      username: null,
+      placeId: null,
+      createdAt: admin.firestore.FieldValue.serverTimestamp()
+    });
   }
-
-  const { robux, unlimited } = JSON.parse(event.body);
-
-  const code = generateKey();
-
-  await db.collection("keys").add({
-    code,
-    robux: unlimited ? null : robux,
-    unlimited: !!unlimited,
-    redeemed: false,
-    createdAt: admin.firestore.FieldValue.serverTimestamp()
-  });
 
   return {
     statusCode: 200,
-    body: JSON.stringify({
-      ok: true,
-      code
-    })
+    body: JSON.stringify({ message: "Keys created successfully" })
   };
 };
