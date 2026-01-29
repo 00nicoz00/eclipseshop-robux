@@ -45,6 +45,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
 
 .page-hero {
@@ -84,7 +85,6 @@ body {
   border-radius: 28px;
   padding: 36px;
   text-align: center;
-  margin-top: 30px;
   box-shadow:
     0 0 45px rgba(255,0,0,0.35),
     inset 0 0 25px rgba(255,0,0,0.08);
@@ -94,7 +94,8 @@ body {
   max-width: 360px;
 }
 
-.redeem-card h2 {
+.redeem-card h2,
+.center-card h1 {
   margin-bottom: 20px;
 }
 
@@ -110,6 +111,10 @@ input {
   color: white;
   margin-bottom: 16px;
   font-size: 15px;
+}
+
+input::placeholder {
+  color: rgba(255,255,255,0.5);
 }
 
 button {
@@ -137,6 +142,15 @@ button:active {
   margin-top: 12px;
   font-size: 13px;
   opacity: 0.7;
+}
+
+/* =========================
+   ADMIN PANEL
+========================= */
+.admin-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 /* =========================
@@ -196,23 +210,13 @@ button:active {
 .red   { background: #8a0f0f; }
 
 /* =========================
-   TUTORIAL & WARNING
+   WARNING / ERROR
 ========================= */
-.tutorial {
-  margin-top: 25px;
-  font-size: 14px;
-  opacity: 0.9;
-  text-align: left;
-}
-
-.tutorial li {
-  margin-bottom: 8px;
-}
-
 .warning {
   color: #ffcc00;
   margin-top: 12px;
   font-weight: 600;
+  text-align: center;
 }
 
 /* =========================
@@ -245,7 +249,7 @@ button:active {
 }
 
 /* =========================
-   MOBILE (APP-LIKE)
+   MOBILE
 ========================= */
 @media (max-width: 600px) {
 
