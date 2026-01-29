@@ -1,52 +1,42 @@
-import { db } from "./firebase.js";
-import {
-  collection,
-  getDocs,
-  deleteDoc,
-  doc
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+const activeList = document.getElementById("activeList");
+const redeemedList = document.getElementById("redeemedList");
 
-const activeList = document.getElementById("activeKeysList");
-const redeemedList = document.getElementById("redeemedKeysList");
+const totalKeys = document.getElementById("totalKeys");
+const redeemedKeys = document.getElementById("redeemedKeys");
+const activeKeys = document.getElementById("activeKeys");
 
 async function loadKeys() {
+  const res = await fetch("/.netlify/functions/list-keys");
+  const data = await res.json();
+
   activeList.innerHTML = "";
   redeemedList.innerHTML = "";
 
-  const snap = await getDocs(collection(db, "keys"));
+  totalKeys.textContent = data.length;
+  redeemedKeys.textContent = data.filter(k => k.redeemed).length;
+  activeKeys.textContent = data.filter(k => !k.redeemed).length;
 
-  let total = 0, redeemed = 0, active = 0;
-
-  snap.forEach(d => {
-    total++;
-    const k = d.data();
-
+  data.forEach(k => {
     const div = document.createElement("div");
-    div.className = "key-item fade-up";
+    div.className = "key-item";
+
     div.innerHTML = `
-      <b>${k.code}</b><br>
-      <small>${k.robux || "Unlimited"} Robux</small>
-      <button class="delete-btn">Delete</button>
+      <code>${k.code}</code>
+      <small>${k.robux} Robux</small>
+      ${k.redeemed ? "" : `<button onclick="deleteKey('${k.id}')">Delete</button>`}
     `;
 
-    div.querySelector(".delete-btn").onclick = async () => {
-      if (!confirm("Delete this key?")) return;
-      await deleteDoc(doc(db, "keys", d.id));
-      loadKeys();
-    };
-
-    if (k.redeemed) {
-      redeemed++;
-      redeemedList.appendChild(div);
-    } else {
-      active++;
-      activeList.appendChild(div);
-    }
+    k.redeemed ? redeemedList.appendChild(div) : activeList.appendChild(div);
   });
+}
 
-  document.getElementById("totalKeys").textContent = total;
-  document.getElementById("redeemedKeys").textContent = redeemed;
-  document.getElementById("activeKeys").textContent = active;
+async function deleteKey(id) {
+  if (!confirm("Delete this key?")) return;
+  await fetch("/.netlify/functions/delete-key", {
+    method: "POST",
+    body: JSON.stringify({ id })
+  });
+  loadKeys();
 }
 
 loadKeys();
