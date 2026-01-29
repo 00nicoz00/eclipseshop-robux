@@ -2,9 +2,8 @@ import { db } from "./firebase.js";
 import {
   collection,
   getDocs,
-  addDoc,
-  query,
-  where
+  deleteDoc,
+  doc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const activeList = document.getElementById("activeKeysList");
@@ -18,16 +17,23 @@ async function loadKeys() {
 
   let total = 0, redeemed = 0, active = 0;
 
-  snap.forEach(doc => {
+  snap.forEach(d => {
     total++;
-    const k = doc.data();
+    const k = d.data();
 
     const div = document.createElement("div");
-    div.className = "key-item";
+    div.className = "key-item fade-up";
     div.innerHTML = `
       <b>${k.code}</b><br>
       <small>${k.robux || "Unlimited"} Robux</small>
+      <button class="delete-btn">Delete</button>
     `;
+
+    div.querySelector(".delete-btn").onclick = async () => {
+      if (!confirm("Delete this key?")) return;
+      await deleteDoc(doc(db, "keys", d.id));
+      loadKeys();
+    };
 
     if (k.redeemed) {
       redeemed++;
@@ -44,4 +50,3 @@ async function loadKeys() {
 }
 
 loadKeys();
-
