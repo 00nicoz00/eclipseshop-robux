@@ -1,95 +1,312 @@
-body {
+/* =========================================================
+   RESET & BASE
+========================================================= */
+* {
   margin: 0;
-  min-height: 100vh;
-  background: radial-gradient(circle at top, #7a0000 0%, #050505 70%);
-  font-family: Inter, sans-serif;
-  color: white;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
+body {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #7a0000 0%, #050505 70%);
+  color: #fff;
+  overflow-x: hidden;
+}
+
+/* =========================================================
+   GLOBAL CONTAINERS
+========================================================= */
 .page {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.page-hero {
-  text-align: center;
-  padding: 60px 20px 30px;
-}
-
-.stats {
+.center {
   display: flex;
-  gap: 25px;
-  margin: 20px 0 40px;
+  justify-content: center;
+  align-items: center;
 }
 
-.stat-box {
-  background: #0b0b0b;
-  padding: 20px;
-  width: 140px;
+.spacer {
+  height: 40px;
+}
+
+/* =========================================================
+   HERO / HOME
+========================================================= */
+.hero {
   text-align: center;
-  border-radius: 22px;
-  box-shadow: 0 0 30px rgba(255,0,0,0.35);
+  padding: 80px 20px 50px;
 }
 
-.stat-box span {
-  display: block;
-  font-size: 26px;
-  margin: 8px 0;
+.hero img {
+  width: 110px;
+  border-radius: 50%;
+  margin-bottom: 25px;
+  box-shadow: 0 0 40px rgba(255,0,0,0.6);
 }
 
-.center-card {
-  width: 360px;
-  background: #0b0b0b;
+.hero h1 {
+  font-size: 46px;
+  letter-spacing: 4px;
+  margin-bottom: 10px;
+}
+
+.hero p {
+  opacity: 0.8;
+  font-size: 15px;
+}
+
+/* =========================================================
+   CARDS (UNIVERSAL)
+========================================================= */
+.card {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(10,10,10,0.96);
   border-radius: 28px;
-  padding: 30px;
-  box-shadow: 0 0 40px rgba(255,0,0,0.35);
+  padding: 36px;
+  box-shadow:
+    0 0 50px rgba(255,0,0,0.35),
+    inset 0 0 25px rgba(255,0,0,0.08);
   margin-bottom: 40px;
 }
 
-input {
-  width: 100%;
-  padding: 15px;
-  border-radius: 18px;
-  border: 1px solid rgba(255,0,0,0.5);
-  background: #020202;
-  color: white;
-  margin-bottom: 15px;
+.card h2 {
+  margin-bottom: 20px;
+  text-align: center;
 }
 
-.checkbox {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 20px;
+.card.small {
+  max-width: 300px;
+  padding: 25px;
+}
+
+/* =========================================================
+   INPUTS & BUTTONS
+========================================================= */
+input,
+select {
+  width: 100%;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,0,0,0.45);
+  background: #020202;
+  color: white;
+  margin-bottom: 18px;
+  font-size: 14px;
+}
+
+input::placeholder {
+  opacity: 0.5;
 }
 
 button {
   width: 100%;
-  padding: 15px;
+  padding: 16px;
   border-radius: 22px;
   border: none;
   background: linear-gradient(135deg, #ff0000, #a30000);
   color: white;
   font-weight: 700;
   cursor: pointer;
+  box-shadow: 0 15px 35px rgba(255,0,0,0.45);
+  transition: transform .15s ease, box-shadow .15s ease;
 }
 
-.keys-layout {
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 45px rgba(255,0,0,0.6);
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+/* =========================================================
+   CHECKBOX
+========================================================= */
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  font-size: 14px;
+}
+
+/* =========================================================
+   ADMIN LOGIN
+========================================================= */
+.admin-login {
+  margin-top: 80px;
+  text-align: center;
+}
+
+/* =========================================================
+   DASHBOARD STATS
+========================================================= */
+.stats {
+  display: flex;
+  gap: 25px;
+  margin-bottom: 50px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.stat-card {
+  width: 150px;
+  padding: 22px;
+  border-radius: 22px;
+  background: linear-gradient(145deg, #0b0b0b, #020202);
+  text-align: center;
+  border: 1px solid rgba(255,0,0,0.35);
+  box-shadow: 0 0 35px rgba(255,0,0,0.35);
+}
+
+.stat-card span {
+  font-size: 28px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+/* =========================================================
+   ADMIN LAYOUT
+========================================================= */
+.admin-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 40px;
-  width: 90%;
-  max-width: 1000px;
+  gap: 50px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* =========================================================
+   KEY LIST
+========================================================= */
+.key-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
 
 .key-row {
-  background: #090909;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: center;
+  padding: 20px;
+  border-radius: 22px;
+  background: linear-gradient(145deg, #0a0a0a, #020202);
   border: 1px solid rgba(255,0,0,0.35);
-  border-radius: 18px;
-  padding: 14px;
-  margin-bottom: 12px;
+  box-shadow: 0 0 30px rgba(255,0,0,0.25);
+}
+
+.key-info {
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+.key-code {
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+/* =========================================================
+   BADGES
+========================================================= */
+.badge {
+  padding: 6px 14px;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge.green {
+  background: #0f8a2f;
+}
+
+.badge.red {
+  background: #8a0f0f;
+}
+
+/* =========================================================
+   DELETE BUTTON
+========================================================= */
+.delete-btn {
+  background: linear-gradient(135deg, #ff3b3b, #8a0000);
+  padding: 10px 16px;
+  border-radius: 16px;
+  font-size: 12px;
+  cursor: pointer;
+  border: none;
+}
+
+/* =========================================================
+   SEARCH
+========================================================= */
+.search-box {
+  margin-bottom: 30px;
+}
+
+/* =========================================================
+   HOW IT WORKS
+========================================================= */
+.how {
   display: flex;
-  justify-content: space-between;
-  font-size: 14px;
+  gap: 20px;
+  justify-content: center;
+  margin: 60px auto;
+  flex-wrap: wrap;
+}
+
+.how-card {
+  width: 160px;
+  padding: 25px;
+  border-radius: 22px;
+  background: linear-gradient(145deg, #0b0b0b, #030303);
+  border: 1px solid rgba(255,0,0,0.35);
+  text-align: center;
+  box-shadow: 0 0 35px rgba(255,0,0,0.3);
+}
+
+.how-card span {
+  font-size: 28px;
+}
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+.fade {
+  animation: fadeUp .8s ease forwards;
+  opacity: 0;
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+@media (max-width: 900px) {
+  .admin-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero h1 {
+    font-size: 34px;
+  }
+
+  .stats {
+    gap: 15px;
+  }
 }
