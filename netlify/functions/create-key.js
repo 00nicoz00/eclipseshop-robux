@@ -1,25 +1,24 @@
-const admin = require("firebase-admin");
-
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_KEY))
-  });
-}
-
-const db = admin.firestore();
+const db = require("./_firebaseAdmin");
+const crypto = require("crypto");
 
 exports.handler = async (event) => {
+  if (event.httpMethod !== "POST")
+    return { statusCode: 405 };
+
   const { robux, unlimited } = JSON.parse(event.body);
 
-  const code = Math.random().toString(36).substring(2, 12).toUpperCase();
+  const code = crypto.randomBytes(4).toString("hex").toUpperCase();
 
   await db.collection("keys").add({
     code,
-    robux: Number(robux),
-    unlimited,
+    robux: unlimited ? null : Number(robux),
+    unlimited: !!unlimited,
     redeemed: false,
-    createdAt: admin.firestore.FieldValue.serverTimestamp()
+    createdAt: Date.now(),
   });
 
-  return { statusCode: 200 };
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ code }),
+  };
 };
