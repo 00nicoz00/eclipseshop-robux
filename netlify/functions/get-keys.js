@@ -9,7 +9,15 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 
 exports.handler = async () => {
-  const snap = await db.collection("keys").get();
-  const keys = snap.docs.map(d => d.data());
-  return { statusCode: 200, body: JSON.stringify(keys) };
+  const snap = await db.collection("keys").orderBy("createdAt", "desc").get();
+
+  const keys = snap.docs.map(d => ({
+    id: d.id,
+    ...d.data()
+  }));
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify(keys)
+  };
 };
