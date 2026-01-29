@@ -31,33 +31,55 @@ btn.onclick = async () => {
   loadKeys();
 };
 
+async function deleteKey(id) {
+  if (!confirm("Delete this key?")) return;
+
+  await fetch("/.netlify/functions/delete-key", {
+    method: "POST",
+    body: JSON.stringify({ id })
+  });
+
+  loadKeys();
+}
+
 async function loadKeys() {
   activeList.innerHTML = "";
   redeemedList.innerHTML = "";
 
-  let total = 0, active = 0, redeemed = 0;
+  let total = 0;
+  let active = 0;
+  let redeemed = 0;
 
   const q = query(collection(db, "keys"), orderBy("createdAt", "desc"));
   const snap = await getDocs(q);
 
-  snap.forEach(doc => {
-    const k = doc.data();
+  snap.forEach(docSnap => {
+    const k = docSnap.data();
+    const id = docSnap.id;
     total++;
 
     if (k.redeemed) {
       redeemed++;
       redeemedList.innerHTML += `
-        <div class="key-row">
-          <span>${k.code}</span>
-          <span>${k.username || "-"} | ${k.placeId || "-"}</span>
-        </div>`;
+        <div class="key-row redeemed">
+          <span class="key-code">${k.code}</span>
+          <span class="key-info">
+            ${k.username || "-"} | ${k.placeId || "-"}
+          </span>
+          <button class="delete-btn" onclick="deleteKey('${id}')">🗑️</button>
+        </div>
+      `;
     } else {
       active++;
       activeList.innerHTML += `
-        <div class="key-row">
-          <span>${k.code}</span>
-          <span>${k.unlimited ? "∞" : k.robux + " R$"}</span>
-        </div>`;
+        <div class="key-row active">
+          <span class="key-code">${k.code}</span>
+          <span class="key-info">
+            ${k.unlimited ? "∞" : k.robux + " R$"}
+          </span>
+          <button class="delete-btn" onclick="deleteKey('${id}')">🗑️</button>
+        </div>
+      `;
     }
   });
 
@@ -66,4 +88,5 @@ async function loadKeys() {
   redeemedKeysEl.textContent = redeemed;
 }
 
+window.deleteKey = deleteKey;
 loadKeys();
