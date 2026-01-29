@@ -2,21 +2,48 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Admin Login</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <title>Admin Login | Eclipse Shop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
 
-  <h1>Admin Login</h1>
+  <div class="page">
 
-  <input id="user" placeholder="Username" />
-  <input id="pass" type="password" placeholder="Password" />
-  <button id="login">Login</button>
+    <!-- HERO -->
+    <div class="page-hero fade-up">
+      <img src="/assets/logo.png" alt="Eclipse Logo" />
+      <h1>Admin Login</h1>
+      <p>Restricted access</p>
+    </div>
 
-  <p id="msg"></p>
+    <!-- LOGIN CARD -->
+    <div class="center-card fade-up fade-delay-1">
+
+      <input
+        id="username"
+        type="text"
+        placeholder="Username"
+        autocomplete="username"
+      />
+
+      <input
+        id="password"
+        type="password"
+        placeholder="Password"
+        autocomplete="current-password"
+      />
+
+      <button id="loginBtn">Login</button>
+
+      <p id="errorMsg" class="warning" style="display:none;"></p>
+
+    </div>
+
+  </div>
 
   <script src="/js/admin-login.js"></script>
 </body>
 </html>
-
-
