@@ -1,29 +1,22 @@
-export async function handler(event) {
+exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Method Not Allowed" };
   }
 
-  try {
-    const { username, password } = JSON.parse(event.body);
+  const { username, password } = JSON.parse(event.body);
 
-    if (
-      username === process.env.ADMIN_USER &&
-      password === process.env.ADMIN_PASS
-    ) {
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ ok: true })
-      };
-    }
+  const ADMIN_USER = process.env.ADMIN_USER;
+  const ADMIN_PASS = process.env.ADMIN_PASS;
 
+  if (username === ADMIN_USER && password === ADMIN_PASS) {
     return {
-      statusCode: 401,
-      body: JSON.stringify({ ok: false, error: "Invalid credentials" })
-    };
-  } catch (err) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: "Server error" })
+      statusCode: 200,
+      body: JSON.stringify({ ok: true })
     };
   }
-}
+
+  return {
+    statusCode: 401,
+    body: JSON.stringify({ error: "Invalid credentials" })
+  };
+};
