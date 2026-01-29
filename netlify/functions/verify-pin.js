@@ -1,45 +1,39 @@
-// netlify/functions/verify-pin.js
-
-const { getPin, clearPin } = require("./pin-memory");
-
 exports.handler = async (event) => {
   try {
     const { pin } = JSON.parse(event.body || "{}");
-    const stored = getPin();
 
-    if (!stored.pin) {
+    const ADMIN_PIN = process.env.ADMIN_PIN;
+    const ADMIN_PIN_EXPIRES = Number(process.env.ADMIN_PIN_EXPIRES);
+
+    if (!ADMIN_PIN || !ADMIN_PIN_EXPIRES) {
       return {
-        statusCode: 401,
-        body: JSON.stringify({ ok: false, error: "NO_ACTIVE_PIN" })
+        statusCode: 500,
+        body: JSON.stringify({ error: "PIN not configured" })
       };
     }
 
-    if (Date.now() > stored.expiresAt) {
-      clearPin();
+    if (Date.now() > ADMIN_PIN_EXPIRES) {
       return {
         statusCode: 401,
-        body: JSON.stringify({ ok: false, error: "PIN_EXPIRED" })
+        body: JSON.stringify({ error: "PIN expired" })
       };
     }
 
-    if (pin !== stored.pin) {
+    if (pin !== ADMIN_PIN) {
       return {
         statusCode: 401,
-        body: JSON.stringify({ ok: false, error: "INVALID_PIN" })
+        body: JSON.stringify({ error: "Invalid PIN" })
       };
     }
-
-    clearPin();
 
     return {
       statusCode: 200,
       body: JSON.stringify({ ok: true })
     };
-
-  } catch (err) {
+  } catch {
     return {
-      statusCode: 500,
-      body: JSON.stringify({ ok: false, error: "SERVER_ERROR" })
+      statusCode: 400,
+      body: JSON.stringify({ error: "Bad request" })
     };
   }
 };
