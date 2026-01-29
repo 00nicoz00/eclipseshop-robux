@@ -270,6 +270,37 @@ button:hover {
   align-items: center;
   gap: 12px;
 }
+/* TESTO KEY */
+#activeList div span,
+#redeemedList div span {
+  flex: 1;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* BOTTONE CESTINO PICCOLO */
+#activeList button,
+#redeemedList button {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  padding: 0;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #ff0000, #b00000);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  box-shadow: none;
+}
+
+#activeList button:hover,
+#redeemedList button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(255,0,0,0.4);
+}
 
 
 /* =====================================================
@@ -287,5 +318,6 @@ button:hover {
     font-size: 2.2rem;
   }
 }
+
 
 
