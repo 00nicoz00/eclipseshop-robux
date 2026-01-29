@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Admin Panel</title>
-</head>
-<body>
-  <h1>Admin Panel</h1>
-  <button onclick="logout()">Logout</button>
+if (sessionStorage.getItem("admin") !== "true") {
+  window.location.href = "/admin";
+}
 
-  <script src="/js/admin-panel.js"></script>
-</body>
-</html>
+function logout() {
+  sessionStorage.removeItem("admin");
+  window.location.href = "/admin";
+}
