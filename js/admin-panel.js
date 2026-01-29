@@ -1,101 +1,47 @@
 import { db } from "./firebase.js";
 import {
   collection,
-  addDoc,
   getDocs,
+  addDoc,
   query,
-  where,
-  deleteDoc,
-  doc,
-  serverTimestamp
+  where
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-const keysRef = collection(db, "keys");
+const activeList = document.getElementById("activeKeysList");
+const redeemedList = document.getElementById("redeemedKeysList");
 
-// ELEMENTI
-const totalKeysEl = document.getElementById("totalKeys");
-const redeemedKeysEl = document.getElementById("redeemedKeys");
-const activeKeysEl = document.getElementById("activeKeys");
-const createMsg = document.getElementById("createMsg");
-const results = document.getElementById("results");
+async function loadKeys() {
+  activeList.innerHTML = "";
+  redeemedList.innerHTML = "";
 
-// 🔢 STATS
-async function loadStats() {
-  const snap = await getDocs(keysRef);
-  let total = 0, redeemed = 0;
+  const snap = await getDocs(collection(db, "keys"));
 
-  snap.forEach(d => {
+  let total = 0, redeemed = 0, active = 0;
+
+  snap.forEach(doc => {
     total++;
-    if (d.data().redeemed) redeemed++;
-  });
+    const k = doc.data();
 
-  totalKeysEl.textContent = total;
-  redeemedKeysEl.textContent = redeemed;
-  activeKeysEl.textContent = total - redeemed;
-}
-
-loadStats();
-
-// 🔑 CREATE KEY
-document.getElementById("createKeyBtn").onclick = async () => {
-  const robux = document.getElementById("robuxInput").value;
-  const unlimited = document.getElementById("unlimitedInput").checked;
-
-  if (!robux && !unlimited) {
-    createMsg.textContent = "Insert robux or select unlimited";
-    return;
-  }
-
-  const key = crypto.randomUUID().slice(0, 8).toUpperCase();
-
-  await addDoc(keysRef, {
-    code: key,
-    robux: unlimited ? 0 : Number(robux),
-    unlimited,
-    redeemed: false,
-    createdAt: serverTimestamp()
-  });
-
-  createMsg.textContent = `Key created: ${key}`;
-  loadStats();
-};
-
-// 🔍 SEARCH
-document.getElementById("searchInput").addEventListener("input", async e => {
-  const value = e.target.value.trim();
-  results.innerHTML = "";
-
-  if (!value) return;
-
-  const q = query(keysRef, where("code", "==", value));
-  const snap = await getDocs(q);
-
-  snap.forEach(d => {
-    const data = d.data();
-
-    const row = document.createElement("div");
-    row.className = "key-row";
-
-    row.innerHTML = `
-      <div>${data.code}</div>
-      <span class="badge ${data.redeemed ? "red" : "green"}">
-        ${data.redeemed ? "REDEEMED" : "ACTIVE"}
-      </span>
-      <button data-id="${d.id}">Delete</button>
+    const div = document.createElement("div");
+    div.className = "key-item";
+    div.innerHTML = `
+      <b>${k.code}</b><br>
+      <small>${k.robux || "Unlimited"} Robux</small>
     `;
 
-    row.querySelector("button").onclick = async () => {
-      await deleteDoc(doc(db, "keys", d.id));
-      row.remove();
-      loadStats();
-    };
-
-    results.appendChild(row);
+    if (k.redeemed) {
+      redeemed++;
+      redeemedList.appendChild(div);
+    } else {
+      active++;
+      activeList.appendChild(div);
+    }
   });
-});
 
-// 🚪 LOGOUT
-window.logout = () => {
-  localStorage.removeItem("admin");
-  location.href = "/admin";
-};
+  document.getElementById("totalKeys").textContent = total;
+  document.getElementById("redeemedKeys").textContent = redeemed;
+  document.getElementById("activeKeys").textContent = active;
+}
+
+loadKeys();
+
